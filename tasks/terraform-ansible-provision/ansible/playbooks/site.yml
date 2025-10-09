@@ -1,0 +1,10 @@
+---
+- name: Demo playbook
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Create a hello file
+      copy:
+        dest: /tmp/ansible_hello.txt
+        content: "Hello from Ansible via Terraform at {{ lookup('pipe', 'date') }}\n"
