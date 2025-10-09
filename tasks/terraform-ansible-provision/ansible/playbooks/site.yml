@@ -1,0 +1,15 @@
+---
+- name: Demo play to create a hello file
+  hosts: all
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Create hello file
+      copy:
+        content: "Hello from Ansible!\n"
+        dest: /tmp/ansible_hello.txt
+        owner: root
+        group: root
+        mode: '0644'
+
