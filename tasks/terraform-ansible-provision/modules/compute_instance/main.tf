@@ -48,3 +48,37 @@ resource "aws_instance" "this" {
   vpc_security_group_ids = [aws_security_group.this.id]
   tags = { Name = var.name }
 }
+
+# Copy playbook and run Ansible on the instance (demo-only)
+resource "null_resource" "ansible_bootstrap" {
+  depends_on = [aws_instance.this]
+
+  provisioner "file" {
+    source      = var.ansible_playbook_local_path
+    destination = "/home/ubuntu/site.yml"
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = aws_instance.this.public_ip
+      private_key = file("~/.ssh/id_rsa")
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install -y software-properties-common",
+      "sudo apt-get update -y",
+      "sudo apt-get install -y ansible",
+      "echo 'localhost' > /home/ubuntu/hosts",
+      "ansible -i /home/ubuntu/hosts all -m ping || true",
+      "ansible-playbook -i /home/ubuntu/hosts /home/ubuntu/site.yml || true"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = aws_instance.this.public_ip
+      private_key = file("~/.ssh/id_rsa")
+    }
+  }
+}

@@ -1,15 +1,10 @@
 ---
-- name: Demo play to create a hello file
+- name: Demo playbook
   hosts: all
   gather_facts: false
   become: true
-
   tasks:
-    - name: Create hello file
+    - name: Create a hello file
       copy:
-        content: "Hello from Ansible!\n"
         dest: /tmp/ansible_hello.txt
-        owner: root
-        group: root
-        mode: '0644'
-
+        content: "Hello from Ansible via Terraform at {{ lookup('pipe', 'date') }}\n"
