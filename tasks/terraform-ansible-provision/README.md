@@ -1,44 +1,41 @@
-Terraform + Ansible Provisioning
+# Task #2 – Terraform multi-env + AWS EC2 + Ansible
 
-This example shows a minimal setup where Terraform provisions an AWS EC2 instance via a reusable module, and Ansible has a simple demo playbook.
+Demonstrates:
+- Multi-environment Terraform structure (`envs/dev`, `envs/prod`) calling a reusable module.
+- Provisioning an Ubuntu EC2 instance on AWS.
+- Installing Ansible on the instance and running a small demo playbook via Terraform provisioners.
 
-Structure:
+> Note: For demos only. In production, prefer SSM or CI-run Ansible rather than Terraform `remote-exec`.
 
-- `modules/compute_instance`: Reusable Terraform module that creates an EC2 instance
-- `envs/dev` and `envs/prod`: Example environments that call the module
-- `ansible/playbooks/site.yml`: Demo playbook that writes a file on the target host
+## Structure
+```
+tasks/terraform-ansible-provision/
+├── envs/
+│   ├── dev/main.tf
+│   └── prod/main.tf
+├── modules/
+│   └── compute_instance/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
+└── ansible/playbooks/site.yml
+```
 
-Prerequisites:
+## Quick Start (dev)
+```bash
+cd tasks/terraform-ansible-provision/envs/dev
+terraform init
+terraform validate
+terraform plan -var 'aws_profile=default' -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'
+# Optional (creates real resources, costs may apply):
+# terraform apply -auto-approve -var 'aws_profile=default' -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'
+```
 
-- Terraform installed
-- AWS credentials configured in your environment (e.g., via AWS CLI)
-- Ansible installed (optional, for running the playbook)
+### Validation
+- `terraform validate` should pass.
+- `terraform plan` shows EC2, SG, key pair, and `null_resource` with provisioners.
+- If applied, SSH: `ssh -i ~/.ssh/id_rsa ubuntu@<public_ip>` and `cat /tmp/ansible_hello.txt`.
 
-Quick start (dev environment):
-
-1. Change directory:
-   
-   ```bash
-   cd tasks/terraform-ansible-provision/envs/dev
-   ```
-
-2. Initialize and apply:
-   
-   ```bash
-   terraform init
-   terraform apply
-   ```
-
-3. After apply, note the `public_ip` output. To run the demo Ansible playbook, ensure the instance is reachable (e.g., proper security group allowing SSH) and you have the appropriate SSH key:
-
-   ```bash
-   cd ../../ansible
-   ansible-playbook -i "<PUBLIC_IP>," -u ec2-user --private-key /path/to/key.pem playbooks/site.yml
-   ```
-
-Notes:
-
-- The module includes basic variables such as `ami`, `instance_type`, and `instance_name`. Update values in the environment `main.tf` files as needed.
-- For simplicity, networking/security groups/keys are not fully managed here; tailor to your environment.
-
-
+### Trade-offs
+- `remote-exec` is acceptable for demos but not ideal at scale.
+- Minimal secret handling for brevity; rotate keys/offload to a vault in real projects.
