@@ -1,0 +1,10 @@
+# Common VCS dirs
+.git/
+.gitignore
+
+# OS
+.DS_Store
+
+# Archives
+*.tgz
+*.zip

@@ -1,0 +1,24 @@
+image:
+  repository: wordpress
+  tag: php8.2-apache
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+site:
+  url: http://localhost
+
+db:
+  host: mysql
+  name: wordpress
+  user: wp_user
+  password: wp_pass
+
+resources: {}
+persistence:
+  enabled: false
+  size: 8Gi
