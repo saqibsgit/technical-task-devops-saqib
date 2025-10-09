@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wordpress.fullname" . }}
+  labels: {{- include "wordpress.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "wordpress.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "wordpress.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: wordpress
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: {{ .Values.db.host | quote }}
+            - name: WORDPRESS_DB_NAME
+              value: {{ .Values.db.name | quote }}
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "wordpress.fullname" . }}
+                  key: db-user
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "wordpress.fullname" . }}
+                  key: db-password
+            - name: WORDPRESS_CONFIG_EXTRA
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "wordpress.fullname" . }}
+                  key: wp-config-extra
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+

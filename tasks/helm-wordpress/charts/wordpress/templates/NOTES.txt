@@ -1,0 +1,8 @@
+1) Validate the chart:
+   helm lint .
+
+2) Render templates without installing:
+   helm template demo .
+
+3) Dry-run install:
+   helm install demo . --dry-run --debug
