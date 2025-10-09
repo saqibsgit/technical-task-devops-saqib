@@ -7,4 +7,4 @@ This repository contains my solutions for three selected tasks:
 
 > Goal: demonstrate realistic DevOps practices — modular IaC, automation, Kubernetes packaging, and clear documentation — under a 4-hour constraint.
 
-## Repository Layout (evolves per PR)cat > .editorconfig <<'EOF'
+## Repository Layout (evolves per PR)
