@@ -40,4 +40,5 @@ jobs:
         run: docker load -i sample-app-ci.tar
 
       - name: Run tests inside the container
-        run: docker run --rm sample-app-ci:latest pytest -q
+        run: docker run --rm sample-app-ci:latest pytest -q tests
+
