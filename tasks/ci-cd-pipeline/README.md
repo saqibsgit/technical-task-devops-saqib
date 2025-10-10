@@ -1,6 +1,6 @@
 ## Task #4 – Basic CI/CD Pipeline (GitHub Actions)
 
-Two-stage pipeline using Docker and GitHub-hosted runners:
+This is part of a generic DevOps portfolio demo. Two-stage pipeline using Docker and GitHub-hosted runners:
 
 - **build**: build the Docker image and upload it as an artifact (`sample-app-ci.tar`).
 - **test**: download and load the image artifact, then run `pytest` inside the container.
