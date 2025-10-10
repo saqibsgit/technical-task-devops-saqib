@@ -1,70 +1,34 @@
-# Submission Overview — DevOps Technical Task (Saqib Ali)
-
-This repository contains my completed solutions for the **doctorly DevOps technical task**.  
-I selected the following three tasks based on my strongest skills and alignment with the job’s DevOps focus.
-
----
-
-## ✅ Selected Tasks
-
-### **Task #2 – Terraform + Ansible**
-- **Goal:** Demonstrate Infrastructure as Code design and configuration automation.
-- **Summary:** Multi-environment Terraform project (AWS) that provisions an Ubuntu EC2 instance and bootstraps Ansible to execute a demo playbook.  
-- **Highlights:**
-  - Reusable Terraform module (`modules/compute_instance`).
-  - Separate environments (`envs/dev`, `envs/prod`).
-  - Safe validation commands (`init -backend=false`, `validate`, `plan`).
-  - Demo Ansible playbook: creates `/tmp/ansible_hello.txt` on the instance.
-- **Key Skills Demonstrated:** IaC modular design, cloud provisioning, Terraform–Ansible integration.
-
----
-
-### **Task #4 – CI/CD Pipeline (GitHub Actions)**
-- **Goal:** Build a two-stage pipeline using Docker and GitHub-hosted runners.
-- **Summary:** Minimal CI/CD pipeline that builds and tests a Python CLI app inside Docker containers.
-- **Highlights:**
-  - **Build stage:** Builds a Docker image and uploads it as a CI artifact.
-  - **Test stage:** Downloads the image and runs tests *inside the container*.
-  - Uses GitHub-hosted Ubuntu runners (cloud-based service).
-- **Key Skills Demonstrated:** CI/CD automation, containerized testing, artifact flow, workflow design.
-
----
-
-### **Task #5 – Helm Chart for WordPress**
-- **Goal:** Showcase Kubernetes packaging using Helm.
-- **Summary:** A templated Helm chart for WordPress including all required Kubernetes manifests.
-- **Highlights:**
-  - Includes `Chart.yaml`, `values.yaml`, Deployment, Service, Secret, ConfigMap, and optional PVC.
-  - Validated using `helm lint` and `helm install --dry-run --debug`.
-  - Customizable parameters for DB credentials, site URL, replicas, and persistence.
-- **Key Skills Demonstrated:** Kubernetes templating, Helm best practices, parameterized deployments.
-
----
-
-## 🧩 How to Review Quickly
-
-| Area | Command Summary | Validation Goal |
-|------|------------------|-----------------|
-| **Task #2** Terraform | `cd tasks/terraform-ansible-provision/envs/dev`<br>`terraform init -backend=false`<br>`terraform validate`<br>`terraform plan -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'` | Validate IaC structure & syntax |
-| **Task #4** CI/CD | CI runs automatically via GitHub Actions | Verify two-stage pipeline build → test |
-| **Task #5** Helm | `cd tasks/helm-wordpress/charts/wordpress`<br>`helm lint .`<br>`helm install demo . --dry-run --debug` | Confirm chart validity and dry-run deploy |
-
----
-
-## 🧠 Assumptions & Constraints
-- CI uses **GitHub-hosted Ubuntu runners** as a cloud-based execution environment.  
-- Terraform is validated without applying changes to avoid infrastructure costs.  
-- Helm chart is validated via dry-run only, no actual cluster deployment.  
-- Secrets are base64-encoded for demo purposes; in production, they would come from a vault or external secrets manager.
-
----
-
-## ⚙️ Trade-offs & Future Improvements
-- Terraform `remote-exec` used for demonstration; in production, I’d use AWS SSM or a configuration management pipeline.
-- CI could be extended with linting, Trivy image scanning, or pre-commit hooks.
-- Helm chart could include Ingress and HorizontalPodAutoscaler for real-world usage.
-
----
-
-## ⏱️ Time Management
-Each task was scoped to reflect **4 hours total effort**, prioritizing clarity, correctness, and completeness over unnecessary complexity.
+Submission Overview — DevOps Technical Task (Saqib Ali)
+I selected three tasks aligned to the role’s DevOps focus:
+✅ Selected Tasks
+Task #2 — Terraform + Ansible
+What: Multi-environment Terraform (AWS) that provisions an Ubuntu EC2 instance and bootstraps Ansible to run a demo playbook.
+How: Reusable module (modules/compute_instance) called by envs/dev and envs/prod.
+Validation:
+terraform -chdir=tasks/terraform-ansible-provision/envs/dev init -backend=false
+terraform -chdir=tasks/terraform-ansible-provision/envs/dev validate
+terraform -chdir=tasks/terraform-ansible-provision/envs/dev plan -var 'aws_profile=default' -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'
+Note: The Ansible playbook runs on the instance via Terraform file + remote-exec provisioners and writes /tmp/ansible_hello.txt.
+Task #4 — CI/CD (GitHub Actions)
+What: Minimal two-stage pipeline (build → test) using Docker and GitHub-hosted runners.
+How:
+build: docker build the sample Python CLI; upload image artifact (sample-app-ci.tar).
+test: download and load the artifact; run pytest inside the same container to validate runtime consistency.
+Local:
+cd tasks/ci-cd-pipeline/sample-app
+docker build -t sample-app:local .
+docker run --rm sample-app:local pytest -q tests
+Task #5 — Helm (WordPress)
+What: Helm chart with templated Deployment, Service, Secret, ConfigMap, optional PVC; customizable via values.yaml.
+Validation:
+cd tasks/helm-wordpress/charts/wordpress
+helm lint .
+helm install demo . --dry-run --debug
+Note: Validated with lint + dry-run only; no live cluster used.
+Assumptions & Trade-offs
+CI: Uses GitHub-hosted Ubuntu runners (cloud-based).
+IaC: Validation only (no backend or apply) to avoid resource creation and cost.
+Config Mgmt: remote-exec is demo-friendly; production would use SSM or a pipeline runner.
+Secrets: Helm secrets come from values for demo; production would use Vault/External Secrets.
+Time Management
+Kept scope tight to the 4-hour guidance while demonstrating correctness, clarity, and best practices.
