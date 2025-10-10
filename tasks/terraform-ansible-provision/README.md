@@ -1,4 +1,6 @@
 ## Task #2 – Terraform multi-env + AWS EC2 + Ansible
+This is part of a generic DevOps portfolio demo.
+
 ### Demonstrates
 - Multi-environment Terraform structure (`envs/dev`, `envs/prod`) calling a reusable module (`modules/compute_instance`).
 - Provisioning an Ubuntu EC2 instance on AWS.

@@ -1,6 +1,6 @@
 ## Task #5 – Helm Chart for WordPress
 
-Templates Kubernetes resources to deploy WordPress (without actually deploying).
+This is part of a generic DevOps portfolio demo. Templates Kubernetes resources to deploy WordPress (without actually deploying).
 
 Supports customization of DB connection, site URL, replicas, and persistence via `values.yaml`.
 

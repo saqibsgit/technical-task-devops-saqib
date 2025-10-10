@@ -1,6 +1,6 @@
 # DevOps Technical Task — Saqib Ali
 
-This repository contains my submission for the **doctorly DevOps Engineer technical task**.  
+This repository is a public portfolio demo of a **DevOps technical task**.  
 It demonstrates practical DevOps skills across **Infrastructure as Code (Terraform + Ansible)**, **CI/CD automation (GitHub Actions)**, and **Kubernetes packaging (Helm)**.
 
 <!-- CI badge example: replace <owner>/<repo> after you push public -->

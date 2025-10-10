@@ -10,7 +10,7 @@ module "ec2" {
   source       = "../../modules/compute_instance"
   region       = var.region
   aws_profile  = var.aws_profile
-  name         = "doctorly-prod-ec2"
+  name         = "demo-prod-ec2"
   public_key   = var.public_key
 }
 
