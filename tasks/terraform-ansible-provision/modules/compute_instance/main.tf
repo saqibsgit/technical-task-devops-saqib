@@ -1,6 +1,6 @@
 terraform {
   required_providers {
-    aws = { source = "hashicorp/aws", version = "~> 5.0" }
+    aws  = { source = "hashicorp/aws", version = "~> 5.0" }
     null = { source = "hashicorp/null", version = "~> 3.0" }
   }
 }
@@ -10,14 +10,7 @@ provider "aws" {
   profile = var.aws_profile
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-}
+// AMI is now provided via variable to avoid needing AWS lookups during planning
 
 resource "aws_key_pair" "this" {
   key_name   = "${var.name}-key"
@@ -42,11 +35,11 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_instance" "this" {
-  ami                    = data.aws_ami.ubuntu.id
+  ami                    = var.ami_id
   instance_type          = var.instance_type
   key_name               = aws_key_pair.this.key_name
   vpc_security_group_ids = [aws_security_group.this.id]
-  tags = { Name = var.name }
+  tags                   = { Name = var.name }
 }
 
 # Copy playbook and run Ansible on the instance (demo-only)
@@ -60,7 +53,7 @@ resource "null_resource" "ansible_bootstrap" {
       type        = "ssh"
       user        = "ubuntu"
       host        = aws_instance.this.public_ip
-      private_key = file("~/.ssh/id_rsa")
+      private_key = file(pathexpand(var.ssh_private_key_path))
     }
   }
 
@@ -78,7 +71,7 @@ resource "null_resource" "ansible_bootstrap" {
       type        = "ssh"
       user        = "ubuntu"
       host        = aws_instance.this.public_ip
-      private_key = file("~/.ssh/id_rsa")
+      private_key = file(pathexpand(var.ssh_private_key_path))
     }
   }
 }

@@ -8,16 +8,16 @@
 {{- end -}}
 
 {{- define "wordpress.labels" -}}
-helm.sh/chart: {{ include "wordpress.name" . }}-{{ .Chart.Version | replace "+" "_" }}
-app.kubernetes.io/name: {{ include "wordpress.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
-app.kubernetes.io/managed-by: Helm
+helm.sh/chart: {{ printf "%s-%s" (include "wordpress.name" .) (.Chart.Version | replace "+" "_") | quote }}
+app.kubernetes.io/name: {{ include "wordpress.name" . | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ "Helm" | quote }}
 {{- end -}}
 
 {{- define "wordpress.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "wordpress.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "wordpress.name" . | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- end -}}
 
 
