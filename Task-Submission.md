@@ -1,4 +1,4 @@
-## Submission Overview — DevOps Technical Task (Saqib Ali)
+## Tasks Submission Overview — DevOps Technical Task (Saqib Ali)
 
 I selected three tasks aligned to the role’s DevOps focus.
 
@@ -8,13 +8,34 @@ I selected three tasks aligned to the role’s DevOps focus.
 
 - **What**: Multi-environment Terraform (AWS) that provisions an Ubuntu EC2 instance and bootstraps Ansible to run a demo playbook.
 - **How**: Reusable module (`modules/compute_instance`) called by `envs/dev` and `envs/prod`.
-- **Validation**:
+- **Validation & usage**:
 
-```bash
-terraform -chdir=tasks/terraform-ansible-provision/envs/dev init -backend=false
-terraform -chdir=tasks/terraform-ansible-provision/envs/dev validate
-terraform -chdir=tasks/terraform-ansible-provision/envs/dev plan -var 'aws_profile=default' -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'
-```
+  - Prerequisites: Terraform >= 1.6, AWS CLI v2, SSH public key at `~/.ssh/id_rsa.pub`.
+  - Configure AWS profile (example):
+    ```bash
+    aws configure --profile default
+    export AWS_PROFILE=default
+    ```
+  - Initialize:
+    ```bash
+    terraform -chdir=tasks/terraform-ansible-provision/envs/dev init
+    terraform -chdir=tasks/terraform-ansible-provision/envs/prod init
+    ```
+  - Validate:
+    ```bash
+    terraform -chdir=tasks/terraform-ansible-provision/envs/dev validate
+    terraform -chdir=tasks/terraform-ansible-provision/envs/prod validate
+    ```
+  - Plan with tfvars and your SSH public key:
+    ```bash
+    terraform -chdir=tasks/terraform-ansible-provision/envs/dev plan \
+      -var-file=dev.tfvars \
+      -var "public_key=$(cat ~/.ssh/id_rsa.pub)"
+
+    terraform -chdir=tasks/terraform-ansible-provision/envs/prod plan \
+      -var-file=prod.tfvars \
+      -var "public_key=$(cat ~/.ssh/id_rsa.pub)"
+    ```
 
 Note: The Ansible playbook runs on the instance via Terraform `file` + `remote-exec` provisioners and writes `/tmp/ansible_hello.txt`.
 

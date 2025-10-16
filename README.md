@@ -31,43 +31,10 @@ It demonstrates practical DevOps skills across **Infrastructure as Code (Terrafo
 └── README.md
 ```
 
-## 🧪 Quick Local Validation
+## 📄 How to Navigate
 
-### Task #2 – Terraform + Ansible
-```bash
-terraform -chdir=tasks/terraform-ansible-provision/envs/dev init -backend=false
-terraform -chdir=tasks/terraform-ansible-provision/envs/dev validate
-terraform -chdir=tasks/terraform-ansible-provision/envs/dev plan -var 'aws_profile=default' -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'
-# Optional: apply will create real AWS resources and incur cost
-# terraform -chdir=tasks/terraform-ansible-provision/envs/dev apply -auto-approve -var 'aws_profile=default' -var 'public_key=$(cat ~/.ssh/id_rsa.pub)'
-```
-
-### Task #4 – CI/CD (GitHub Actions, minimal)
-```bash
-cd tasks/ci-cd-pipeline/sample-app
-docker build -t sample-app:local .
-docker run --rm sample-app:local                  # prints 5
-docker run --rm sample-app:local pytest -q tests  # run tests INSIDE the container (matches CI)
-```
-
-### Task #5 – Helm (WordPress)
-```bash
-cd tasks/helm-wordpress/charts/wordpress
-helm lint .
-helm install demo . --dry-run --debug
-```
-
-### CI/CD Details (Task #4)
-The pipeline (`.github/workflows/ci.yml`) has two jobs:
-- build → builds a Docker image and uploads it as an artifact (`sample-app-ci.tar`).
-- test → downloads that artifact, loads the image, and runs pytest inside the container.
-- Runs on GitHub-hosted Ubuntu runners (cloud-based).
- 
-### Assumptions
-- Terraform validation avoids using a backend or applying resources.
-- Helm validation uses lint and dry-run only; no cluster required.
-- Docker-based pipeline ensures reproducible build and test environments.
- 
-### Notes for Reviewers
-- Each task folder contains its own README with setup and validation steps.
-- The repository follows structured commits/PRs and standard hygiene (`.editorconfig`, `.gitignore`, PR template).
+- For validation and detailed setup instructions, see `Task-Submission.md`.
+- Each task folder contains its own README with task-specific steps:
+  - `tasks/terraform-ansible-provision/README.md`
+  - `tasks/ci-cd-pipeline/README.md` (inside `sample-app`)
+  - `tasks/helm-wordpress/README.md`

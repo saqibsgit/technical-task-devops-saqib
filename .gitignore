@@ -10,11 +10,22 @@ dist/
 .DS_Store
 
 # Terraform
+**/.terraform/*
 *.tfstate
 *.tfstate.*
-.terraform/
-.terraform.lock.hcl
+.terraform.tfstate.lock.info
 crash.log
+crash.*.log
+terraform.tfvars
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.tfplan
+.terraformrc
+terraform.rc
 
 # Helm/K8s
 charts/*/charts/
@@ -23,5 +34,4 @@ charts/*/tmp/
 
 # Misc
 *.log
-EOF
 
